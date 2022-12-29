@@ -3,16 +3,116 @@ version: '3'
 services:
   webserver:
     image: nginx:latest
+    container_name: webserver
     ports:
       - 80:80
       - 444:443
     restart: always
+#    network_mode: host
     volumes:
       - ./user_conf.d/:/etc/nginx/conf.d/:ro
       - ./certbot/www:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
+    depends_on: 
+      - nextcloud
+    links:
+      - nextcloud
+
   certbot:
     image: certbot/certbot:latest
+    container_name: certbot
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
+
+#NEXTCLOUD
+  db:
+    image: mariadb
+    container_name: db
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=passwd123
+      - MYSQL_PASSWORD=passwd123
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    restart: always
+
+  redis:
+    image: redis
+    restart: always
+    command: redis-server --requirepass redispassword
+
+  nextcloud:
+    image: nextcloud
+    container_name: nextcloud
+    restart: always
+    links:
+      - db
+      - redis
+    ports:
+      - 8080:80
+    volumes:
+      - nextcloud:/var/www/html:rw
+      - /media/szymon/data/nc25data:/var/www/html/data:rw
+    environment:
+      - MYSQL_PASSWORD=passwd123
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+      - REDIS_HOST_PASSWORD=redispassword
+      - VIRTUAL_HOST=dysk.paczos.org
+      - LETSENCRYPT_HOST=dysk.paczos.org
+      - VIRTUAL_PORT=9000
+      - TRUSTED_PROXIES=dysk.paczos.org
+      - APACHE_DISABLE_REWRITE_IP=1
+#      - OVERWRITECLIURL=https://yourdomain.com
+#      - OVERWRITEPROTOCOL=https
+      # I think this hooks in at a slightly different place
+#      - NEXTCLOUD_TRUSTED_DOMAINS=dysk.paczos.org
+      # maybe you also want this
+#      - OVERWRITEHOST=yourdomain.com
+    depends_on: 
+      - db
+      - redis
+    restart: always
+
+#  collabora:
+#    image: collabora/code
+#    container_name: collabora
+#    ports:
+#      - 9980:9980
+#    cap_add:
+#      - MKNOD
+#    environment:
+#      - domain=example\\.domain\\.com
+#      - VIRTUAL_HOST=offices.ydns.eu
+#      - VIRTUAL_NETWORK=nginx-proxy
+#      - extra_params=--o:ssl.enable=false --o:ssl.termination=false
+#      - LETSENCRYPT_HOST=offices.domain.com
+#      - LETSENCRYPT_EMAIL=example@com.com
+#      - username=collabora
+#      - password=collabora
+#    networks:
+#      - nextcloud_network
+#    restart: always
+#    expose:
+#      - '80'
+#      - '443'
+
+volumes:
+  conf:
+  vhost:
+  html:
+  dhparam:
+  certs:
+  acme:
+  nextcloud:
+  db:
+  postgresql_data:
+
+networks:
+  default:
+    name: nginx-proxy
