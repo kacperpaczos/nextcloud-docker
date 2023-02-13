@@ -82,6 +82,7 @@ volumes:
   db:
   postgresql_data:
 
-networks:
-  default:
-    name: nginx-proxy
+networks: 
+  default: 
+    external: 
+      name: common-network 
