@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-#NEXTCLOUD
   db:
     image: mariadb
     container_name: db
@@ -22,7 +21,7 @@ services:
     command: redis-server --requirepass redispassword
 
   nextcloud:
-    image: nextcloud
+    image: nextcloud:25
     container_name: nextcloud
     restart: always
     links:
@@ -39,17 +38,11 @@ services:
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=db
       - REDIS_HOST_PASSWORD=redispassword
-      - VIRTUAL_HOST=dysk.paczos.org
-      - LETSENCRYPT_HOST=dysk.paczos.org
+#      - VIRTUAL_HOST=dysk.paczos.org
+#      - LETSENCRYPT_HOST=dysk.paczos.org
       - VIRTUAL_PORT=9000
-      - TRUSTED_PROXIES=dysk.paczos.org
-      - APACHE_DISABLE_REWRITE_IP=1
-#      - OVERWRITECLIURL=https://yourdomain.com
-#      - OVERWRITEPROTOCOL=https
-      # I think this hooks in at a slightly different place
-#      - NEXTCLOUD_TRUSTED_DOMAINS=dysk.paczos.org
-      # maybe you also want this
-#      - OVERWRITEHOST=yourdomain.com
+#      - TRUSTED_PROXIES=dysk.paczos.org
+#      - APACHE_DISABLE_REWRITE_IP=1
     depends_on: 
       - db
       - redis
