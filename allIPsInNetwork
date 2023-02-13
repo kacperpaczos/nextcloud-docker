@@ -1,7 +1,0 @@
-#!/bin/bash
-sudo apt install jq
-
-sudo docker network inspect -f \
-'{{json .Containers}}' nextcloud-aio | \
-jq '.[] | .Name + ":" + .IPv4Address'
-
