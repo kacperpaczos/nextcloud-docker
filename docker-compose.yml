@@ -30,7 +30,7 @@ services:
     ports:
       - 8080:80
     volumes:
-      - nextcloud:/var/www/html:rw
+      - /var/www/html:/var/www/html:rw
       - /media/szymon/data/nc25data:/var/www/html/data:rw
     environment:
       - MYSQL_PASSWORD=passwd123
