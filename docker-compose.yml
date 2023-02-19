@@ -21,7 +21,7 @@ services:
     command: redis-server --requirepass redispassword
 
   nextcloud:
-    image: nextcloud:25 #fpm?
+    image: nextcloud:25-fpm
     container_name: nextcloud
     restart: always
     links:
