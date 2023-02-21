@@ -29,6 +29,7 @@ services:
       - redis
     ports:
       - 8080:80
+      - 9000:9000
     volumes:
       - /var/www/html:/var/www/html:rw
       - /media/szymon/data/nc25data:/var/www/html/data:rw
