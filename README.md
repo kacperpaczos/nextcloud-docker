@@ -1,3 +1,3 @@
 # nextcloud-docker
 
-Scurity test: https://scan.nextcloud.com/
+Security test: https://scan.nextcloud.com/
