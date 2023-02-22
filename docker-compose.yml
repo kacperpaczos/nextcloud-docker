@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: mariadb
+    image: mariadb:10.3-focal
     container_name: db
     restart: always
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
