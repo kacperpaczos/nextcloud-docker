@@ -2,10 +2,11 @@ version: '3'
 
 services:
   db:
-    image: mariadb:10.3-focal
+    image: mariadb:10.5
     container_name: db
     restart: always
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
+#    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROWs
+    command: ["--transaction-isolation=READ-COMMITTED", "--binlog-format=ROW"]
     volumes:
       - db:/var/lib/mysql
     environment:
@@ -16,7 +17,7 @@ services:
     restart: always
 
   redis:
-    image: redis
+    image: redis:alpine
     container_name: redis
     restart: always
     command: redis-server --requirepass redispassword
