@@ -5,7 +5,6 @@ services:
     image: mariadb:10.5
     container_name: db
     restart: always
-#    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROWs
     command: ["--transaction-isolation=READ-COMMITTED", "--binlog-format=ROW"]
     volumes:
       - db:/var/lib/mysql
@@ -31,8 +30,8 @@ services:
       - redis
     ports:
       - 8080:80
-#      - 9000:9000
     volumes:
+#      - ncapp:/var/www/html:rw
       - /var/www/html:/var/www/html:rw
       - /media/szymon/data/nc25data:/var/www/html/data:rw
     environment:
@@ -43,7 +42,7 @@ services:
       - REDIS_HOST_PASSWORD=redispassword
 #      - VIRTUAL_HOST=dysk.paczos.org
 #      - LETSENCRYPT_HOST=dysk.paczos.org
-      - VIRTUAL_PORT=9000
+#      - VIRTUAL_PORT=9000
 #      - TRUSTED_PROXIES=dysk.paczos.org
 #      - APACHE_DISABLE_REWRITE_IP=1
     depends_on: 
@@ -74,6 +73,16 @@ services:
 #      - '80'
 #      - '443'
 
+#  nextcloudoffice:
+#    image: collabora/code
+#    container_name: nextcloudoffice
+#    hostname: nextcloudoffice
+#    restart: unless-stopped
+#    cap_add:
+#      - MKNOD
+#    environment:
+#      domain: "dysk.paczos.org"
+
 volumes:
   conf:
   vhost:
@@ -84,6 +93,7 @@ volumes:
   nextcloud:
   db:
   postgresql_data:
+  ncapp: #usedby
 
 networks: 
   default: 
