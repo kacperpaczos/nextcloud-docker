@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  db:
+  nextcloud_database:
     image: mariadb:10.5
-    container_name: db
+    container_name: nextcloud_database
     restart: always
     command: ["--transaction-isolation=READ-COMMITTED", "--binlog-format=ROW"]
     volumes:
@@ -17,23 +17,21 @@ services:
       - MARIADB_DISABLE_UPGRADE_BACKUP=1
     restart: always
 
-  redis:
+  nextcloud_redis:
     image: redis:alpine
-    container_name: redis
+    container_name: nextcloud_redis
     restart: always
     command: redis-server --requirepass redispassword
 
-  nextcloud:
+  nextcloud_app:
     image: nextcloud:25-fpm
-    container_name: nextcloud
-    restart: always
+    container_name: nextcloud_app
     links:
-      - db
-      - redis
+      - nextcloud_database
+      - nextcloud_redis
     ports:
       - 8080:80
     volumes:
-#      - ncapp:/var/www/html:rw
       - /var/www/html:/var/www/html:rw
       - /media/szymon/data/nc25data:/var/www/html/data:rw
     environment:
@@ -48,8 +46,8 @@ services:
 #      - TRUSTED_PROXIES=dysk.paczos.org
 #      - APACHE_DISABLE_REWRITE_IP=1
     depends_on: 
-      - db
-      - redis
+      - nextcloud_database
+      - nextcloud_redis
     restart: always
 
 #  collabora:
