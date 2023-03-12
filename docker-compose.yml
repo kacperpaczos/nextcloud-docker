@@ -7,7 +7,7 @@ services:
     restart: always
     command: ["--transaction-isolation=READ-COMMITTED", "--binlog-format=ROW"]
     volumes:
-      - db:/var/lib/mysql
+      - nextcloud_database:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=passwd123
       - MYSQL_PASSWORD=passwd123
@@ -24,7 +24,7 @@ services:
     command: redis-server --requirepass redispassword
 
   nextcloud_app:
-    image: nextcloud:25-fpm
+    image: nextcloud:25-fpm-alpine
     container_name: nextcloud_app
     links:
       - nextcloud_database
@@ -32,13 +32,13 @@ services:
     ports:
       - 8080:80
     volumes:
-      - /var/www/html:/var/www/html:rw
+      - nextcloud_app:/var/www/html:rw
       - /media/szymon/data/nc25data:/var/www/html/data:rw
     environment:
       - MYSQL_PASSWORD=passwd123
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_HOST=db
+      - MYSQL_HOST=nextcloud_database
       - REDIS_HOST_PASSWORD=redispassword
 #      - VIRTUAL_HOST=dysk.paczos.org
 #      - LETSENCRYPT_HOST=dysk.paczos.org
@@ -49,6 +49,18 @@ services:
       - nextcloud_database
       - nextcloud_redis
     restart: always
+
+  nextcloud_web:
+    build: ./nextcloud_web
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html:ro
+    environment:
+#      - VIRTUAL_HOST=
+#      - LETSENCRYPT_HOST=
+#      - LETSENCRYPT_EMAIL=
+    depends_on:
+      - nextcloud_app
 
 #  collabora:
 #    image: collabora/code
@@ -84,16 +96,9 @@ services:
 #      domain: "dysk.paczos.org"
 
 volumes:
-  conf:
-  vhost:
-  html:
-  dhparam:
-  certs:
-  acme:
-  nextcloud:
-  db:
+  nextcloud_app:
+  nextcloud_database:
   postgresql_data:
-  ncapp: #usedby
 
 networks: 
   default: 
