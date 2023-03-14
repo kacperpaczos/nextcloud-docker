@@ -54,8 +54,8 @@ services:
     build: ./web/dockerfile
     restart: always
     volumes:
-      - nextcloud:/var/www/html:ro
-    environment:
+      - nextcloud_app:/var/www/html:ro
+#    environment:
 #      - VIRTUAL_HOST=
 #      - LETSENCRYPT_HOST=
 #      - LETSENCRYPT_EMAIL=
