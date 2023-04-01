@@ -1,10 +1,9 @@
 version: '3'
 
 services:
-  nextcloud_database:
+  nextclouddatabase:
     image: mariadb:10.5
-    container_name: nextcloud_database
-    restart: always
+    container_name: nextcloudDatabase
     command: ["--transaction-isolation=READ-COMMITTED", "--binlog-format=ROW"]
     volumes:
       - nextcloud_database:/var/lib/mysql
@@ -15,20 +14,20 @@ services:
       - MYSQL_USER=nextcloud
       - MARIADB_AUTO_UPGRADE=1
       - MARIADB_DISABLE_UPGRADE_BACKUP=1
-    restart: always
+    restart: unless-stopped
 
-  nextcloud_redis:
+  nextcloudredis:
     image: redis:alpine
-    container_name: nextcloud_redis
-    restart: always
+    container_name: nextcloudRedis
+    restart: unless-stopped
     command: redis-server --requirepass redispassword
 
-  nextcloud_app:
+  nextcloudapp:
     image: nextcloud:25-fpm-alpine
-    container_name: nextcloud_app
+    container_name: nextcloudApp
     links:
-      - nextcloud_database
-      - nextcloud_redis
+      - nextclouddatabase
+      - nextcloudredis
     ports:
       - 8080:80
     volumes:
@@ -38,21 +37,24 @@ services:
       - MYSQL_PASSWORD=passwd123
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - MYSQL_HOST=nextcloud_database
+      - MYSQL_HOST=nextclouddatabase
       - REDIS_HOST_PASSWORD=redispassword
 #      - VIRTUAL_HOST=dysk.paczos.org
 #      - LETSENCRYPT_HOST=dysk.paczos.org
 #      - VIRTUAL_PORT=9000
 #      - TRUSTED_PROXIES=dysk.paczos.org
+      - NEXTCLOUD_TRUSTED_DOMAINS=dysk.paczos.org
 #      - APACHE_DISABLE_REWRITE_IP=1
     depends_on: 
-      - nextcloud_database
-      - nextcloud_redis
-    restart: always
+      - nextclouddatabase
+      - nextcloudredis
+    restart: unless-stopped
 
-  nextcloud_web:
-    build: ./web/dockerfile
-    restart: always
+  nextcloudweb:
+    container_name: nextcloudWeb
+    build: 
+      context: ./web
+    restart: unless-stopped
     volumes:
       - nextcloud_app:/var/www/html:ro
 #    environment:
@@ -60,7 +62,22 @@ services:
 #      - LETSENCRYPT_HOST=
 #      - LETSENCRYPT_EMAIL=
     depends_on:
-      - nextcloud_app
+      - nextcloudapp
+
+  nextcloudphpmyadmin:
+    container_name: nextcloudPHPMyAdmin
+    image: phpmyadmin:5
+    environment:
+      PMA_HOST: "nextclouddatabase"
+      MYSQL_ROOT_PASSWORD: "passwd123"
+    ports:
+      - '8081:80'
+#    networks:
+#      backend:
+#        ipv4_address: 172.28.0.30
+#        aliases:
+#          - phpmyadmin
+    restart: unless-stopped
 
 #  collabora:
 #    image: collabora/code
@@ -85,15 +102,17 @@ services:
 #      - '80'
 #      - '443'
 
-#  nextcloudoffice:
-#    image: collabora/code
-#    container_name: nextcloudoffice
-#    hostname: nextcloudoffice
-#    restart: unless-stopped
-#    cap_add:
-#      - MKNOD
-#    environment:
-#      domain: "dysk.paczos.org"
+  nextcloudoffice:
+    image: collabora/code
+    container_name: nextcloudoffice
+    hostname: nextcloudoffice
+    restart: unless-stopped
+    cap_add:
+      - MKNOD
+    environment:
+      - domain=dysk.paczos.org
+      - "extra_params=--o:ssl.enable=false --o:ssl.termination=false"
+
 
 volumes:
   nextcloud_app:
