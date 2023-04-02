@@ -1,5 +1,5 @@
 mariadb ~> mariadb gallery
 Review all config files, make them extern?
 MAke backend and frontend networks, 
-Add static ip to nginx (NCWeb) and NCOffice
+
  

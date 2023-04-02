@@ -61,6 +61,11 @@ services:
 #      - VIRTUAL_HOST=
 #      - LETSENCRYPT_HOST=
 #      - LETSENCRYPT_EMAIL=
+    networks:
+      default:
+        ipv4_address: 172.19.0.1
+        aliases:
+          - nextcloudweb
     depends_on:
       - nextcloudapp
 
@@ -112,6 +117,11 @@ services:
     environment:
       - domain=dysk.paczos.org
       - "extra_params=--o:ssl.enable=false --o:ssl.termination=false"
+    networks:
+      default:
+        ipv4_address: 172.19.0.2
+        aliases:
+          - nextcloudoffice
 
 
 volumes:
