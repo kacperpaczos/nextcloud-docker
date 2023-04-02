@@ -3,7 +3,7 @@
 Security test: https://scan.nextcloud.com/
 
 Static IPs:
-nextcloudweb: 172.19.0.1
+nextcloudweb: 172.19.0.3
 nextcloudoffice: 172.19.0.2
 
 test nextcloudoffice:

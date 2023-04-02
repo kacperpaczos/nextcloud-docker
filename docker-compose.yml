@@ -51,7 +51,7 @@ services:
     restart: unless-stopped
 
   nextcloudweb:
-    container_name: nextcloudWeb
+    container_name:     nextcloudWeb
     build: 
       context: ./web
     restart: unless-stopped
@@ -63,7 +63,7 @@ services:
 #      - LETSENCRYPT_EMAIL=
     networks:
       default:
-        ipv4_address: 172.19.0.1
+        ipv4_address: 172.19.0.3
         aliases:
           - nextcloudweb
     depends_on:
