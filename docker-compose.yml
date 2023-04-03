@@ -45,25 +45,29 @@ services:
 #      - TRUSTED_PROXIES=dysk.paczos.org
       - NEXTCLOUD_TRUSTED_DOMAINS=dysk.paczos.org
 #      - APACHE_DISABLE_REWRITE_IP=1
-    depends_on: 
+    depends_on:
       - nextclouddatabase
       - nextcloudredis
     restart: unless-stopped
 
   nextcloudweb:
-    container_name:     nextcloudWeb
-    build: 
+    container_name: nextcloudWeb
+    build:
       context: ./web
     restart: unless-stopped
+    ports:
+      - "81:80"
     volumes:
-      - nextcloud_app:/var/www/html:ro
-#    environment:
-#      - VIRTUAL_HOST=
+      - nextcloud_app:/var/www/html:rw
+#      - /var/log/nginx/error.log LOGS
+#      - ./nginx/:/etc/nginx:rw
+    environment:
+      - NGINX_PORT=80
 #      - LETSENCRYPT_HOST=
 #      - LETSENCRYPT_EMAIL=
     networks:
       default:
-        ipv4_address: 172.19.0.3
+        ipv4_address: 172.19.0.23
         aliases:
           - nextcloudweb
     depends_on:
@@ -119,7 +123,7 @@ services:
       - "extra_params=--o:ssl.enable=false --o:ssl.termination=false"
     networks:
       default:
-        ipv4_address: 172.19.0.2
+        ipv4_address: 172.19.0.22
         aliases:
           - nextcloudoffice
 
@@ -129,7 +133,7 @@ volumes:
   nextcloud_database:
   postgresql_data:
 
-networks: 
-  default: 
-    external: 
-      name: common-network 
+networks:
+  default:
+    external:
+      name: common-network

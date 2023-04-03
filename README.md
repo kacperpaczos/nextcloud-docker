@@ -3,8 +3,8 @@
 Security test: https://scan.nextcloud.com/
 
 Static IPs:
-nextcloudweb: 172.19.0.3
-nextcloudoffice: 172.19.0.2
+nextcloudweb: 172.19.0.23
+nextcloudoffice: 172.19.0.22
 
 test nextcloudoffice:
-curl -k http://172.19.0.2:9980
+curl -k http://172.19.0.22:9980
