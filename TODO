@@ -1,5 +1,6 @@
 mariadb ~> mariadb gallery
 Review all config files, make them extern?
-MAke backend and frontend networks, 
-
- 
+Make backend and frontend networks, 
+Upgrade nginx configs, use sites etc, upgrade conf.d
+Make doc to run cand maintaince
+Delete folder with admin accout
