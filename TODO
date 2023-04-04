@@ -4,3 +4,4 @@ Make backend and frontend networks,
 Upgrade nginx configs, use sites etc, upgrade conf.d
 Make doc to run cand maintaince
 Delete folder with admin accout
+fix mess with ports
