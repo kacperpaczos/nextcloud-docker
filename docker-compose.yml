@@ -73,20 +73,20 @@ services:
     depends_on:
       - nextcloudapp
 
-  nextcloudphpmyadmin:
-    container_name: nextcloudPHPMyAdmin
-    image: phpmyadmin:5
-    environment:
-      PMA_HOST: "nextclouddatabase"
-      MYSQL_ROOT_PASSWORD: "passwd123"
-    ports:
-      - '8081:80'
+#  nextcloudphpmyadmin:
+#    container_name: nextcloudPHPMyAdmin
+#    image: phpmyadmin:5
+#    environment:
+#      PMA_HOST: "nextclouddatabase"
+#      MYSQL_ROOT_PASSWORD: "passwd123"
+#    ports:
+#      - '8081:80'
 #    networks:
 #      backend:
 #        ipv4_address: 172.28.0.30
 #        aliases:
 #          - phpmyadmin
-    restart: unless-stopped
+#    restart: unless-stopped
 
 #  collabora:
 #    image: collabora/code
