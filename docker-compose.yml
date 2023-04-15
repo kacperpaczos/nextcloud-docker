@@ -23,7 +23,7 @@ services:
     command: redis-server --requirepass redispassword
 
   nextcloudapp:
-    image: nextcloud:25-fpm-alpine
+    image: nextcloud:26-fpm-alpine
     container_name: nextcloudApp
     links:
       - nextclouddatabase
@@ -32,19 +32,17 @@ services:
       - 8080:80
     volumes:
       - nextcloud_app:/var/www/html:rw
-      - /media/szymon/data/nc25data:/var/www/html/data:rw
+#      - ./website1:/var/www/html:rw
+      - /media/szymon/data1/nc26data:/var/www/html/data:rw
+#      - ./config/config.php:/var/www/html/config/config.php:rw
     environment:
       - MYSQL_PASSWORD=passwd123
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=nextclouddatabase
       - REDIS_HOST_PASSWORD=redispassword
-#      - VIRTUAL_HOST=dysk.paczos.org
-#      - LETSENCRYPT_HOST=dysk.paczos.org
-#      - VIRTUAL_PORT=9000
-#      - TRUSTED_PROXIES=dysk.paczos.org
+      - TRUSTED_PROXIES=172.19.0.7 # IP address of nginx-proxy
       - NEXTCLOUD_TRUSTED_DOMAINS=dysk.paczos.org
-#      - APACHE_DISABLE_REWRITE_IP=1
     depends_on:
       - nextclouddatabase
       - nextcloudredis
@@ -59,6 +57,7 @@ services:
       - "81:80"
     volumes:
       - nextcloud_app:/var/www/html:rw
+#      - ./website1:/var/www/html:rw
 #      - /var/log/nginx/error.log LOGS
 #      - ./nginx/:/etc/nginx:rw
     environment:
