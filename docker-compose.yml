@@ -41,7 +41,7 @@ services:
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=nextclouddatabase
       - REDIS_HOST_PASSWORD=redispassword
-      - TRUSTED_PROXIES=172.19.0.7 # IP address of nginx-proxy
+      - TRUSTED_PROXIES=172.19.0.240 # IP address of nginx-proxy
       - NEXTCLOUD_TRUSTED_DOMAINS=dysk.paczos.org
     depends_on:
       - nextclouddatabase
