@@ -6,3 +6,4 @@ Make doc to run cand maintaince
 Delete folder with admin accout
 fix mess with ports
 An IP should be allocated from the upper part of the pool.
+docker swarm
