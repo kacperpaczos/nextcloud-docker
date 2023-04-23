@@ -42,7 +42,7 @@ services:
       - MYSQL_HOST=nextclouddatabase
       - REDIS_HOST_PASSWORD=redispassword
       - TRUSTED_PROXIES=172.19.0.240 # IP address of nginx-proxy
-      - NEXTCLOUD_TRUSTED_DOMAINS=dysk.paczos.org
+      - NEXTCLOUD_TRUSTED_DOMAINS=localhost dysk.paczos.org
     depends_on:
       - nextclouddatabase
       - nextcloudredis
@@ -113,13 +113,17 @@ services:
   nextcloudoffice:
     image: collabora/code
     container_name: nextcloudoffice
-    hostname: nextcloudoffice
+    ports:
+      - 9980:9980
     restart: unless-stopped
+    env_file: ./config/collabora/collabora.env
+    volumes:
+      - ./collabora/coolwsd/loolwsd.xml:/etc/loolwsd/loolwsd.xml-new
     cap_add:
       - MKNOD
     environment:
-      - domain=dysk.paczos.org
-      - "extra_params=--o:ssl.enable=false --o:ssl.termination=false"
+#      - domain=office.paczos.org   
+      - 'extra_params=--o:ssl.enable=false --o:ssl.termination=true'
     networks:
       default:
         ipv4_address: 172.19.0.22
