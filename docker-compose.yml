@@ -23,7 +23,10 @@ services:
     command: redis-server --requirepass redispassword
 
   nextcloudapp:
-    image: nextcloud:26-fpm-alpine
+#    image: nextcloud:26-fpm-alpine
+    build:
+      context: ./26/fpm
+      dockerfile: Dockerfile
     container_name: nextcloudApp
     links:
       - nextclouddatabase
