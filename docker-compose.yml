@@ -38,6 +38,8 @@ services:
 #      - ./website1:/var/www/html:rw
       - /media/szymon/data1/nc26data:/var/www/html/data:rw
 #      - ./config/config.php:/var/www/html/config/config.php:rw
+      - type: tmpfs
+        target: /tmp:exec
     environment:
       - MYSQL_PASSWORD=passwd123
       - MYSQL_DATABASE=nextcloud
@@ -46,6 +48,7 @@ services:
       - REDIS_HOST_PASSWORD=redispassword
       - TRUSTED_PROXIES=172.19.0.240 # IP address of nginx-proxy
       - NEXTCLOUD_TRUSTED_DOMAINS=localhost dysk.paczos.org
+      - APPIMAGE_EXTRACT_AND_RUN=1
     depends_on:
       - nextclouddatabase
       - nextcloudredis
